@@ -1,0 +1,38 @@
+export const approvals = [
+  {
+    id: 1,
+    title: "Deploy Copilot for Enterprise",
+    type: "CIO",
+    requestor: "Alice Johnson",
+    dateSubmitted: "2024-03-10",
+    priority: "High",
+    status: "Pending",
+  },
+  {
+    id: 2,
+    title: "OpenAI API Usage Increase",
+    type: "Finance",
+    requestor: "Bob Williams",
+    dateSubmitted: "2024-03-11",
+    priority: "Medium",
+    status: "Approved",
+  },
+  {
+    id: 3,
+    title: "Custom LLM Vendor Contract",
+    type: "Security",
+    requestor: "Charlie Brown",
+    dateSubmitted: "2024-02-28",
+    priority: "Critical",
+    status: "Requires Remediation",
+  },
+  {
+    id: 4,
+    title: "Code Assistant Pilot",
+    type: "Executive Steering",
+    requestor: "David Smith",
+    dateSubmitted: "2024-03-05",
+    priority: "High",
+    status: "Approved with Conditions",
+  },
+];

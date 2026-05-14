@@ -1,0 +1,517 @@
+Rebuild the entire “VibeOps by OverYonder” platform from scratch as a premium multi-tenant AI Transformation Operating System.
+
+This is NOT a simple project management tool.
+
+This platform combines:
+- AI PMO
+- AI Governance
+- AI Portfolio Management
+- AI Transformation Management
+- Consulting Operations
+- CIO Operations
+- AI Control Tower
+- Security Assessment
+- Intake & Approval Workflows
+- Work Management
+- Adoption Tracking
+- Migration Management
+- Executive Analytics
+- Enterprise Architecture Visibility
+- AI Supply Chain Visibility
+- Multi-Role Operational Dashboards
+
+---------------------------------------------------
+CORE PRODUCT CONCEPT
+---------------------------------------------------
+
+VibeOps is the command center enterprises and consulting firms use to manage AI transformation from idea intake through governance, assessment, approval, migration, adoption, delivery, optimization, and executive reporting.
+
+The platform supports:
+- enterprise internal transformation teams
+- CIO organizations
+- consulting/services firms
+- system integrators
+- government agencies
+- enterprise architecture teams
+- AI governance offices
+
+---------------------------------------------------
+CRITICAL UX REQUIREMENT
+---------------------------------------------------
+
+The application must support TWO PRIMARY OPERATING MODES:
+
+1. Internal Enterprise / CIO View
+2. Consulting / Services Company View
+
+The user must be able to SWITCH between these views using a GLOBAL VIEW SWITCHER DROPDOWN at the top navigation bar.
+
+Example dropdown:
+[ Internal Enterprise ▼ ]
+[ Consulting Services ▼ ]
+
+When switching views:
+- dashboards change
+- KPIs change
+- sidebar navigation changes
+- workflows change
+- metrics change
+- executive summaries change
+- modules shown change
+
+This is still ONE CODEBASE and ONE PLATFORM.
+
+The platform should behave like:
+- role-aware
+- tenant-aware
+- mode-aware
+- dynamically rendered based on active operating model
+
+---------------------------------------------------
+TECH STACK
+---------------------------------------------------
+
+Use:
+- React
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- Recharts
+- Framer Motion
+- Lucide icons
+
+Use:
+- local mock state only
+- mock APIs only
+- no backend required initially
+
+---------------------------------------------------
+DESIGN STYLE
+---------------------------------------------------
+
+The application should feel like:
+- Palantir
+- ServiceNow executive dashboards
+- Gartner executive analytics
+- McKinsey operating dashboards
+- modern AI command centers
+
+Design requirements:
+- premium enterprise SaaS
+- dark mode first
+- glassmorphism
+- modern AI aesthetic
+- executive scorecards
+- clean KPI cards
+- operational intelligence feel
+- responsive
+- smooth transitions
+- executive boardroom quality
+
+---------------------------------------------------
+TOP NAVIGATION
+---------------------------------------------------
+
+Create a global top navigation bar containing:
+- VibeOps logo
+- Global search
+- Notifications
+- AI insights button
+- Tenant selector
+- Environment badge
+- User profile
+- VIEW SWITCHER dropdown
+
+VIEW SWITCHER OPTIONS:
+1. Internal Enterprise View
+2. Consulting Services View
+
+---------------------------------------------------
+LEFT SIDEBAR NAVIGATION
+---------------------------------------------------
+
+The sidebar should dynamically change based on selected view.
+
+---------------------------------------------------
+INTERNAL ENTERPRISE VIEW SIDEBAR
+---------------------------------------------------
+
+Show:
+- CIO Operations Dashboard
+- AI Portfolio
+- Intake Center
+- Assessments
+- Approval Workflows
+- Task Management
+- AI Adoption Center
+- Security Assessments
+- AI Control Tower
+- Applications
+- Shadow AI Discovery
+- Migrations
+- Governance
+- Architecture Graph
+- Executive Review Board
+- Resource Management
+- Forecasting
+- Admin
+
+---------------------------------------------------
+CONSULTING SERVICES VIEW SIDEBAR
+---------------------------------------------------
+
+Show:
+- Services CEO Dashboard
+- Client Portfolio
+- Consulting Engagements
+- Delivery Operations
+- Revenue Operations
+- Resource Utilization
+- Billable Utilization
+- Proposal Pipeline
+- Task Delivery
+- Customer Health
+- AI Transformation Programs
+- Delivery Risks
+- Forecasting
+- Consultant Capacity
+- Executive Reporting
+- Admin
+
+---------------------------------------------------
+MULTI-TENANT SUPPORT
+---------------------------------------------------
+
+Support mock tenants:
+1. Department of Defense
+2. Global Financial Services Corp
+3. AI Consulting Partners
+4. Enterprise Transformation Group
+
+Each tenant should support:
+- branding
+- departments
+- business units
+- stakeholders
+- enabled modules
+- governance policies
+- KPIs
+- custom dashboards
+
+---------------------------------------------------
+ROLE-BASED ACCESS
+---------------------------------------------------
+
+Support roles:
+- CIO
+- CEO
+- CTO
+- PMO Lead
+- Enterprise Architect
+- AI Governance Lead
+- Security Officer
+- Consultant
+- Delivery Manager
+- Practice Leader
+- Operations Lead
+- Executive Sponsor
+
+Different roles see:
+- different dashboards
+- different widgets
+- different KPIs
+- different workflows
+
+---------------------------------------------------
+INTERNAL ENTERPRISE DASHBOARD
+---------------------------------------------------
+
+Purpose:
+Manage internal AI transformation.
+
+Focus:
+- cost optimization
+- modernization
+- adoption
+- governance
+- operational efficiency
+- AI maturity
+- security posture
+- platform rationalization
+
+KPI cards:
+- Total Cost Savings
+- Weekly Cost Savings
+- Hours Automated
+- AI Adoption Rate
+- Legacy Apps Retired
+- Technical Debt Reduction
+- Security Readiness
+- Governance Score
+- Shadow AI Reduction
+- Migration Progress
+
+Charts:
+- Weekly Cost Savings
+- Department AI Adoption
+- Workflow Automation Growth
+- Migration Progress
+- Platform Consolidation
+- Security Risk Reduction
+- AI Spend Optimization
+
+---------------------------------------------------
+CONSULTING SERVICES DASHBOARD
+---------------------------------------------------
+
+Purpose:
+Manage consulting delivery and revenue generation.
+
+Focus:
+- revenue
+- billable utilization
+- delivery health
+- project margin
+- customer satisfaction
+- consulting pipeline
+- forecasting
+
+KPI cards:
+- Weekly Revenue
+- Revenue Growth
+- Billable Utilization
+- Project Margin
+- Active Engagements
+- Consultant Capacity
+- Proposal Win Rate
+- On-Time Delivery
+- AI Services Revenue
+- Delivery Risk
+
+Charts:
+- Weekly Revenue Trends
+- Consultant Utilization
+- Margin Trends
+- Revenue Forecasting
+- Client Revenue Breakdown
+- Delivery Health
+- Resource Allocation
+- Delivery Risk Heatmaps
+
+Use weekly metrics with dollar values.
+
+---------------------------------------------------
+INTAKE CENTER
+---------------------------------------------------
+
+Create centralized intake management.
+
+Support requests:
+- AI initiatives
+- modernization requests
+- migration projects
+- architecture reviews
+- AI governance reviews
+- security reviews
+- consulting requests
+- automation ideas
+- operational optimization requests
+
+Fields:
+- request title
+- request type
+- department
+- business problem
+- expected outcome
+- stakeholders
+- budget estimate
+- ROI estimate
+- cost savings estimate
+- revenue opportunity
+- AI platforms used
+- development platforms used
+- compliance sensitivity
+- security sensitivity
+- timeline estimate
+
+Lifecycle:
+- Submitted
+- Initial Review
+- Assessment
+- Security Review
+- Architecture Review
+- Prioritization
+- Approval
+- Planning
+- Delivery
+- Adoption
+- Completed
+
+---------------------------------------------------
+ASSESSMENT MODULE
+---------------------------------------------------
+
+Support:
+- AI readiness
+- security assessments
+- migration complexity
+- operational readiness
+- governance readiness
+- adoption readiness
+- architecture complexity
+- consultant discovery
+
+Generate:
+- scores
+- heatmaps
+- recommendations
+- risks
+- remediation plans
+- executive summaries
+
+---------------------------------------------------
+APPROVAL WORKFLOW ENGINE
+---------------------------------------------------
+
+Support:
+- multi-stage approvals
+- conditional approvals
+- CIO approvals
+- Security approvals
+- Finance approvals
+- Executive steering approvals
+- consulting approvals
+
+Statuses:
+- Pending
+- Approved
+- Approved with Conditions
+- Rejected
+- Requires Remediation
+
+---------------------------------------------------
+TASK MANAGEMENT
+---------------------------------------------------
+
+Support:
+- Kanban boards
+- sprint boards
+- work queues
+- executive summaries
+- Gantt/timeline views
+
+Task types:
+- discovery
+- assessment
+- development
+- migration
+- testing
+- adoption
+- training
+- deployment
+- optimization
+
+---------------------------------------------------
+AI CONTROL TOWER
+---------------------------------------------------
+
+Track:
+- OpenAI
+- Claude
+- Gemini
+- Azure AI
+- AWS Bedrock
+- internal models
+
+Track:
+- token spend
+- model usage
+- risk
+- failures
+- human review
+- data sensitivity
+- approval status
+- AI supply chain
+
+---------------------------------------------------
+APPLICATION INVENTORY
+---------------------------------------------------
+
+Track:
+- ServiceNow
+- Salesforce
+- SAP
+- Oracle
+- Replit apps
+- Lovable apps
+- Bolt apps
+- spreadsheets
+- shadow AI
+- legacy systems
+
+Each app should show:
+- owner
+- department
+- modernization status
+- AI readiness
+- security posture
+- integration complexity
+
+---------------------------------------------------
+ARCHITECTURE GRAPH
+---------------------------------------------------
+
+Create visual relationship mapping between:
+- departments
+- applications
+- stakeholders
+- initiatives
+- consultants
+- AI models
+- vendors
+- risks
+- migrations
+
+---------------------------------------------------
+ADOPTION CENTER
+---------------------------------------------------
+
+Track:
+- user adoption
+- workflow usage
+- AI maturity
+- training completion
+- employee sentiment
+- automation usage
+- operational improvements
+
+---------------------------------------------------
+SECURITY ASSESSMENTS
+---------------------------------------------------
+
+Assess:
+- prompt injection risk
+- hallucination risk
+- data leakage
+- API security
+- vendor risk
+- GitHub exposure
+- secrets management
+- compliance readiness
+
+---------------------------------------------------
+EXECUTIVE EXPERIENCE
+---------------------------------------------------
+
+The entire experience should feel like:
+
+“A premium enterprise AI transformation operating system used by CIOs, consulting firms, and executive leadership to govern, prioritize, deliver, secure, adopt, and optimize AI transformation across the enterprise.”
+
+The app should feel:
+- polished
+- strategic
+- enterprise-grade
+- operationally intelligent
+- scalable
+- modern
+- investor-demo ready

@@ -1,0 +1,38 @@
+export const assessments = [
+  {
+    id: 1,
+    title: "Enterprise AI Readiness",
+    tenant: "Department of Defense",
+    score: 82,
+    status: "Completed",
+    date: "2024-01-15",
+    riskLevel: "Low",
+  },
+  {
+    id: 2,
+    title: "Vendor Security Posture",
+    tenant: "Global Financial Services Corp",
+    score: 65,
+    status: "In Progress",
+    date: "2024-03-05",
+    riskLevel: "High",
+  },
+  {
+    id: 3,
+    title: "Cloud Migration Complexity",
+    tenant: "AI Consulting Partners",
+    score: 75,
+    status: "Scheduled",
+    date: "2024-04-01",
+    riskLevel: "Medium",
+  },
+  {
+    id: 4,
+    title: "Data Governance Maturity",
+    tenant: "Enterprise Transformation Group",
+    score: 91,
+    status: "Completed",
+    date: "2023-11-20",
+    riskLevel: "Low",
+  },
+];

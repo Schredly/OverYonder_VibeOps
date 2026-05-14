@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "VibeOps by OverYonder"
+version = "1.0.0"
+id = "artifacts/vibeops"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23058
+
+[services.development]
+run = "pnpm --filter @workspace/vibeops run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/vibeops", "run", "build" ]
+publicDir = "artifacts/vibeops/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23058"
+BASE_PATH = "/"
