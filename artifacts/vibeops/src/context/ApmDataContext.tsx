@@ -14,10 +14,19 @@ import { technologies as seedTechnologies, type Technology } from "@/data/apm/te
 import { capabilities as seedCapabilities, type Capability } from "@/data/apm/capabilities";
 import { people as seedPeople, type Person } from "@/data/apm/people";
 import { assessments as seedAssessments, type Assessment } from "@/data/apm/assessments";
+import { scopeToTenant } from "@/lib/tenantScope";
+import { useAppContext } from "@/context/AppContext";
 
-/** A mutable, in-memory collection of records keyed by `id`. */
+/**
+ * A mutable, in-memory collection of records keyed by `id`.
+ *
+ * `items` is scoped to the active tenant — list views read this. `all` is the
+ * full, unscoped collection — by-id lookups (detail pages) read this so deep
+ * links resolve regardless of the active tenant.
+ */
 export interface Collection<T> {
   items: T[];
+  all: T[];
   add: (item: T) => void;
   update: (id: string, patch: Partial<T>) => void;
   remove: (id: string) => void;
@@ -42,11 +51,14 @@ const ApmDataContext = createContext<ApmDataContextValue | undefined>(undefined)
 /**
  * Backs every APM list with mutable React state so create / update / delete
  * flows persist for the session. All seed data is mock — there is no API yet.
+ * `items` is filtered to `tenantId`; `all` keeps the full set.
  */
-function useCollection<T extends { id: string }>(seed: T[]): Collection<T> {
+function useCollection<T extends { id: string }>(seed: T[], tenantId: string): Collection<T> {
   const [items, setItems] = useState<T[]>(seed);
+  const scoped = useMemo(() => scopeToTenant(items, tenantId), [items, tenantId]);
   return {
-    items,
+    items: scoped,
+    all: items,
     add: (item) => setItems((prev) => [item, ...prev]),
     update: (id, patch) => setItems((prev) => prev.map((x) => (x.id === id ? { ...x, ...patch } : x))),
     remove: (id) => setItems((prev) => prev.filter((x) => x.id !== id)),
@@ -54,17 +66,20 @@ function useCollection<T extends { id: string }>(seed: T[]): Collection<T> {
 }
 
 export function ApmDataProvider({ children }: { children: ReactNode }) {
-  const applications = useCollection<BusinessApplication>(seedApplications);
-  const projects = useCollection<ModernizationProject>(seedProjects);
-  const migrationWaves = useCollection<MigrationWave>(seedWaves);
-  const tasks = useCollection<ApmTask>(seedTasks);
-  const risks = useCollection<ApmRisk>(seedRisks);
-  const decisions = useCollection<ApmDecision>(seedDecisions);
-  const campaigns = useCollection<CertificationCampaign>(seedCampaigns);
-  const technologies = useCollection<Technology>(seedTechnologies);
-  const capabilities = useCollection<Capability>(seedCapabilities);
-  const people = useCollection<Person>(seedPeople);
-  const assessments = useCollection<Assessment>(seedAssessments);
+  const { activeTenant } = useAppContext();
+  const tid = activeTenant.id;
+
+  const applications = useCollection<BusinessApplication>(seedApplications, tid);
+  const projects = useCollection<ModernizationProject>(seedProjects, tid);
+  const migrationWaves = useCollection<MigrationWave>(seedWaves, tid);
+  const tasks = useCollection<ApmTask>(seedTasks, tid);
+  const risks = useCollection<ApmRisk>(seedRisks, tid);
+  const decisions = useCollection<ApmDecision>(seedDecisions, tid);
+  const campaigns = useCollection<CertificationCampaign>(seedCampaigns, tid);
+  const technologies = useCollection<Technology>(seedTechnologies, tid);
+  const capabilities = useCollection<Capability>(seedCapabilities, tid);
+  const people = useCollection<Person>(seedPeople, tid);
+  const assessments = useCollection<Assessment>(seedAssessments, tid);
 
   const value = useMemo<ApmDataContextValue>(
     () => ({
@@ -80,7 +95,7 @@ export function ApmDataProvider({ children }: { children: ReactNode }) {
       people,
       assessments,
     }),
-    // Rebuild when any collection's items change.
+    // Rebuild when any collection's scoped items change.
     [
       applications.items,
       projects.items,

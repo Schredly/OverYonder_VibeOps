@@ -56,8 +56,8 @@ export default function ApplicationDetail() {
   const [editOpen, setEditOpen] = useState(false);
   const [aiOpen, setAiOpen] = useState(false);
   const app = useMemo(
-    () => appStore.items.find((a) => a.id === params?.id),
-    [appStore.items, params?.id],
+    () => appStore.all.find((a) => a.id === params?.id),
+    [appStore.all, params?.id],
   );
 
   if (!app) {

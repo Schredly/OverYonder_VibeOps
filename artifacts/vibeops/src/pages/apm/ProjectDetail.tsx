@@ -27,7 +27,7 @@ export default function ProjectDetail() {
   const { toast } = useToast();
   const [, navigate] = useLocation();
   const [editOpen, setEditOpen] = useState(false);
-  const project = params ? projectStore.items.find((p) => p.id === params.id) : undefined;
+  const project = params ? projectStore.all.find((p) => p.id === params.id) : undefined;
 
   if (!project) {
     return (

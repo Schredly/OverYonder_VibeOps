@@ -86,7 +86,7 @@ function Kbd({ children }: { children: React.ReactNode }) {
 
 export default function GlobalCommandPalette({ open, onOpenChange }: GlobalCommandPaletteProps) {
   const [, navigate] = useLocation();
-  const { activeView, setActiveView } = useAppContext();
+  const { activeView, setActiveView, activeTenant } = useAppContext();
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const [recentIds, setRecentIds] = useStoredIds(RECENT_KEY, 6);
@@ -95,7 +95,7 @@ export default function GlobalCommandPalette({ open, onOpenChange }: GlobalComma
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  const { groups, total, isSearching } = useGlobalSearch(query, activeView);
+  const { groups, total, isSearching } = useGlobalSearch(query, activeView, activeTenant.id);
 
   // --- Global Cmd/Ctrl+K toggle -------------------------------------------
   useEffect(() => {

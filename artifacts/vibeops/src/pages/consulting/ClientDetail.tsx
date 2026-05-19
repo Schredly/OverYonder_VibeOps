@@ -51,8 +51,8 @@ export default function ClientDetail() {
   const [, params] = useRoute<{ id: string }>("/consulting/clients/:id");
   const { clients: clientStore } = useConsultingData();
   const client = useMemo(
-    () => clientStore.items.find((c) => c.id === params?.id),
-    [clientStore.items, params?.id],
+    () => clientStore.all.find((c) => c.id === params?.id),
+    [clientStore.all, params?.id],
   );
 
   if (!client) {

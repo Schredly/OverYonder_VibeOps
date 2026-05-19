@@ -42,9 +42,8 @@ import {
   type EngagementForecast,
   type ForecastStatus,
 } from "@/data/consulting/forecast";
-import { engagements } from "@/data/consulting/engagements";
-import { clients } from "@/data/consulting/clients";
-import { consultants } from "@/data/consulting/consultants";
+import { useConsultingData } from "@/context/ConsultingDataContext";
+import { useAppContext } from "@/context/AppContext";
 
 // Revenue datasets — all values in $K.
 const revenueRanges = {
@@ -158,18 +157,6 @@ const margin = [
   { name: "Q3", value: 33 },
   { name: "Q4", value: 36 },
 ];
-
-const clientNameById: Record<string, string> = Object.fromEntries(
-  clients.map((c) => [c.id, c.name]),
-);
-const consultantNameById: Record<string, string> = Object.fromEntries(
-  consultants.map((c) => [c.id, c.name]),
-);
-
-// Top live engagements by contract value — drawn from real engagement records.
-const topEngagements = [...engagements]
-  .sort((a, b) => b.budget - a.budget)
-  .slice(0, 6);
 
 const tooltipStyle = {
   backgroundColor: "hsl(var(--popover))",
@@ -301,11 +288,40 @@ export default function ConsultingDashboard() {
   const [revenueRange, setRevenueRange] = useState<RevenueRange>("weekly");
   const revenue = revenueRanges[revenueRange];
 
+  const { activeTenant } = useAppContext();
+  const { engagements: engStore, clients: clientStore, consultants: conStore } = useConsultingData();
+  const engagements = engStore.items;
+  const consultants = conStore.items;
+
+  // Name maps draw from the full set so cross-tenant references still resolve.
+  const clientNameById: Record<string, string> = Object.fromEntries(
+    clientStore.all.map((c) => [c.id, c.name]),
+  );
+  const consultantNameById: Record<string, string> = Object.fromEntries(
+    conStore.all.map((c) => [c.id, c.name]),
+  );
+  const topEngagements = [...engagements].sort((a, b) => b.budget - a.budget).slice(0, 6);
+
+  // Headline KPIs — derived from the tenant's data, baselined by its profile.
+  const kpi = activeTenant.kpiProfile;
+  const activeEngagements = engagements.length;
+  const flaggedEngagements = engagements.filter((e) => e.health !== "Healthy").length;
+  const avgMargin = Math.round(
+    engagements.reduce((s, e) => s + e.margin, 0) / (engagements.length || 1),
+  );
+  const avgUtilization = Math.round(
+    consultants.reduce((s, c) => s + c.utilizationActual, 0) / (consultants.length || 1),
+  );
+  const revenueData = revenue.data.map((d) => ({
+    ...d,
+    value: Math.round(d.value * kpi.signalIndex),
+  }));
+
   return (
     <div className="space-y-6 p-8 pb-20">
       <PageHeader
         title="Services CEO Dashboard"
-        description="Consulting operations, revenue health, and delivery posture."
+        description={`${activeTenant.name} — ${activeTenant.summary}`}
         badges={
           <>
             <Badge className="bg-primary/10 text-primary hover:bg-primary/15">Executive View</Badge>
@@ -315,14 +331,14 @@ export default function ConsultingDashboard() {
       />
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <KpiCard title="Weekly Revenue" value={1.45} prefix="$" suffix="M" href="/consulting/billing" trend={12} icon={<DollarSign className="h-5 w-5" />} delay={0.05} />
-        <KpiCard title="Billable Utilization" value={87} suffix="%" href="/consulting/utilization" trend={3.7} icon={<TrendingUp className="h-5 w-5" />} delay={0.1} />
-        <KpiCard title="Project Margin" value={36} suffix="%" href="/consulting/reporting" trend={2.1} icon={<Activity className="h-5 w-5" />} delay={0.15} />
-        <KpiCard title="Active Engagements" value={18} href="/consulting/engagements" trend={15.3} icon={<Briefcase className="h-5 w-5" />} delay={0.2} />
-        <KpiCard title="Pipeline Value" value={8.2} prefix="$" suffix="M" href="/consulting/proposals" subtitle="across proposals" trend={9.4} icon={<DollarSign className="h-5 w-5" />} delay={0.25} />
-        <KpiCard title="Consultant Capacity" value={92} suffix="%" href="/consulting/capacity" subtitle="committed next 30d" trend={4} trendType="neutral" icon={<Users className="h-5 w-5" />} delay={0.3} />
-        <KpiCard title="On-Time Delivery" value={94} suffix="%" href="/consulting/delivery" trend={1.2} icon={<CheckCircle2 className="h-5 w-5" />} delay={0.35} />
-        <KpiCard title="Delivery Risk" value={2} href="/consulting/risks" subtitle="engagements flagged" trend={1} trendDirection="down" trendType="bad" icon={<AlertTriangle className="h-5 w-5" />} delay={0.4} />
+        <KpiCard title="Weekly Revenue" value={kpi.weeklyRevenue} prefix="$" suffix="M" href="/consulting/billing" trend={12} icon={<DollarSign className="h-5 w-5" />} delay={0.05} />
+        <KpiCard title="Billable Utilization" value={avgUtilization} suffix="%" href="/consulting/utilization" trend={3.7} icon={<TrendingUp className="h-5 w-5" />} delay={0.1} />
+        <KpiCard title="Project Margin" value={avgMargin} suffix="%" href="/consulting/reporting" trend={2.1} icon={<Activity className="h-5 w-5" />} delay={0.15} />
+        <KpiCard title="Active Engagements" value={activeEngagements} href="/consulting/engagements" trend={15.3} icon={<Briefcase className="h-5 w-5" />} delay={0.2} />
+        <KpiCard title="Pipeline Value" value={kpi.pipelineValue} prefix="$" suffix="M" href="/consulting/proposals" subtitle="across proposals" trend={9.4} icon={<DollarSign className="h-5 w-5" />} delay={0.25} />
+        <KpiCard title="Consultant Capacity" value={kpi.consultantCapacity} suffix="%" href="/consulting/capacity" subtitle="committed next 30d" trend={4} trendType="neutral" icon={<Users className="h-5 w-5" />} delay={0.3} />
+        <KpiCard title="On-Time Delivery" value={kpi.onTimeDelivery} suffix="%" href="/consulting/delivery" trend={1.2} icon={<CheckCircle2 className="h-5 w-5" />} delay={0.35} />
+        <KpiCard title="Delivery Risk" value={flaggedEngagements} href="/consulting/risks" subtitle="engagements flagged" trend={1} trendDirection="down" trendType="bad" icon={<AlertTriangle className="h-5 w-5" />} delay={0.4} />
       </div>
 
       <div className="space-y-6">
@@ -433,7 +449,7 @@ export default function ConsultingDashboard() {
           }
         >
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={[...revenue.data]}>
+            <BarChart data={revenueData}>
               <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
               <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} />
               <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} tickLine={false} axisLine={false} tickFormatter={formatRevenue} />

@@ -12,10 +12,18 @@ import {
   type ConsultingTimeEntry,
   type ConsultingInvoice,
 } from "@/data/consulting/timeBilling";
+import { scopeToTenant } from "@/lib/tenantScope";
+import { useAppContext } from "@/context/AppContext";
 
-/** A mutable, in-memory collection of records keyed by `id`. */
+/**
+ * A mutable, in-memory collection of records keyed by `id`.
+ *
+ * `items` is scoped to the active tenant; `all` is the full collection for
+ * by-id detail lookups that must resolve regardless of the active tenant.
+ */
 export interface Collection<T> {
   items: T[];
+  all: T[];
   add: (item: T) => void;
   update: (id: string, patch: Partial<T>) => void;
   remove: (id: string) => void;
@@ -36,10 +44,12 @@ interface ConsultingDataContextValue {
 const ConsultingDataContext = createContext<ConsultingDataContextValue | undefined>(undefined);
 
 /** Backs every consulting list with mutable React state (mock data — no API). */
-function useCollection<T extends { id: string }>(seed: T[]): Collection<T> {
+function useCollection<T extends { id: string }>(seed: T[], tenantId: string): Collection<T> {
   const [items, setItems] = useState<T[]>(seed);
+  const scoped = useMemo(() => scopeToTenant(items, tenantId), [items, tenantId]);
   return {
-    items,
+    items: scoped,
+    all: items,
     add: (item) => setItems((prev) => [item, ...prev]),
     update: (id, patch) => setItems((prev) => prev.map((x) => (x.id === id ? { ...x, ...patch } : x))),
     remove: (id) => setItems((prev) => prev.filter((x) => x.id !== id)),
@@ -47,15 +57,18 @@ function useCollection<T extends { id: string }>(seed: T[]): Collection<T> {
 }
 
 export function ConsultingDataProvider({ children }: { children: ReactNode }) {
-  const clients = useCollection<Client>(seedClients);
-  const engagements = useCollection<Engagement>(seedEngagements);
-  const consultants = useCollection<Consultant>(seedConsultants);
-  const proposals = useCollection<Proposal>(seedProposals);
-  const tasks = useCollection<ConsultingTask>(seedTasks);
-  const risks = useCollection<DeliveryRisk>(seedRisks);
-  const programs = useCollection<Program>(seedPrograms);
-  const timeEntries = useCollection<ConsultingTimeEntry>(seedTime);
-  const invoices = useCollection<ConsultingInvoice>(seedInvoices);
+  const { activeTenant } = useAppContext();
+  const tid = activeTenant.id;
+
+  const clients = useCollection<Client>(seedClients, tid);
+  const engagements = useCollection<Engagement>(seedEngagements, tid);
+  const consultants = useCollection<Consultant>(seedConsultants, tid);
+  const proposals = useCollection<Proposal>(seedProposals, tid);
+  const tasks = useCollection<ConsultingTask>(seedTasks, tid);
+  const risks = useCollection<DeliveryRisk>(seedRisks, tid);
+  const programs = useCollection<Program>(seedPrograms, tid);
+  const timeEntries = useCollection<ConsultingTimeEntry>(seedTime, tid);
+  const invoices = useCollection<ConsultingInvoice>(seedInvoices, tid);
 
   const value = useMemo<ConsultingDataContextValue>(
     () => ({ clients, engagements, consultants, proposals, tasks, risks, programs, timeEntries, invoices }),

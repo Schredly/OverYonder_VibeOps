@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { useAppContext } from "@/context/AppContext";
-import { tenants } from "@/data/tenants";
 import { mockRoles } from "@/data/roles";
+import type { TenantEnvironment } from "@/data/tenants";
 import { cn } from "@/lib/utils";
 import { Search, Bell, ChevronDown, Sparkles } from "lucide-react";
 import GlobalCommandPalette from "@/components/search/GlobalCommandPalette";
+import TenantSwitcher from "@/components/layout/TenantSwitcher";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,15 +16,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+const environmentBadge: Record<TenantEnvironment, string> = {
+  Production: "bg-success/10 text-success",
+  Staging: "bg-amber-500/10 text-amber-600",
+  Sandbox: "bg-blue-500/10 text-blue-600",
+};
+
 export default function TopNav() {
-  const {
-    activeView,
-    setActiveView,
-    activeTenant,
-    setActiveTenant,
-    activeRole,
-    setActiveRole,
-  } = useAppContext();
+  const { activeView, setActiveView, activeTenant, activeRole, setActiveRole } = useAppContext();
   const [, navigate] = useLocation();
   const [paletteOpen, setPaletteOpen] = useState(false);
 
@@ -60,28 +60,7 @@ export default function TopNav() {
       </div>
 
       <div className="flex items-center gap-3">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="hidden items-center gap-2 rounded-lg bg-muted px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-secondary md:flex">
-              <span>{activeTenant.name}</span>
-              <ChevronDown className="h-3 w-3 text-muted-foreground" />
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel>Tenant</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {tenants.map((tenant) => (
-              <DropdownMenuItem
-                key={tenant.id}
-                onClick={() => setActiveTenant(tenant)}
-                className={cn(activeTenant.id === tenant.id && "font-medium text-primary")}
-              >
-                {tenant.name}
-                <span className="ml-auto text-xs text-muted-foreground">{tenant.industry}</span>
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <TenantSwitcher />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -105,8 +84,13 @@ export default function TopNav() {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <span className="hidden rounded-full bg-success/10 px-2.5 py-1 text-[10px] font-semibold tracking-wide text-success md:inline-flex">
-          PRODUCTION
+        <span
+          className={cn(
+            "hidden rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide md:inline-flex",
+            environmentBadge[activeTenant.environment],
+          )}
+        >
+          {activeTenant.environment}
         </span>
 
         <div className="flex items-center gap-1 rounded-lg bg-muted p-1">

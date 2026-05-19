@@ -73,7 +73,11 @@ interface PreparedEntry {
   status: string;
 }
 
-export function useGlobalSearch(query: string, activeView: "enterprise" | "consulting") {
+export function useGlobalSearch(
+  query: string,
+  activeView: "enterprise" | "consulting",
+  activeTenantId: string,
+) {
   const [debounced, setDebounced] = useState(query);
 
   useEffect(() => {
@@ -101,6 +105,8 @@ export function useGlobalSearch(query: string, activeView: "enterprise" | "consu
     const scored: { entry: SearchEntry; score: number }[] = [];
 
     for (const p of prepared) {
+      // Tenant scoping — shared records (no tenantId) stay visible to all.
+      if (p.entry.tenantId && p.entry.tenantId !== activeTenantId) continue;
       let sum = 0;
       let matched = true;
       for (const tok of tokens) {
@@ -143,7 +149,7 @@ export function useGlobalSearch(query: string, activeView: "enterprise" | "consu
       }
     }
     return { groups: out, total: count };
-  }, [debounced, prepared, activeView]);
+  }, [debounced, prepared, activeView, activeTenantId]);
 
   return {
     debouncedQuery: debounced,

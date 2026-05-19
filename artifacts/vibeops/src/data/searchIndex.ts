@@ -30,6 +30,7 @@ import {
   Users2,
 } from "lucide-react";
 import { statusToTone } from "@/components/dashboard/StatusBadge";
+import { tenantOf } from "@/lib/tenantScope";
 
 import { applications, findApplication } from "@/data/apm/applications";
 import { capabilities } from "@/data/apm/capabilities";
@@ -72,6 +73,8 @@ export interface SearchEntry {
   icon: LucideIcon;
   /** Extra lowercased text folded into the fuzzy match. */
   keywords: string;
+  /** Owning tenant, or `undefined` for shared records (pages, taxonomy). */
+  tenantId?: string;
 }
 
 /** A command the palette can run rather than a record to open. */
@@ -433,7 +436,11 @@ export const searchIndex: SearchEntry[] = [
   ...consultingTaskEntries,
   ...userEntries,
   ...pageEntries,
-];
+].map((entry) => ({
+  // The raw record id is everything after the `kind:` prefix.
+  ...entry,
+  tenantId: tenantOf(entry.id.slice(entry.id.indexOf(":") + 1)),
+}));
 
 /** Fast id → entry lookup, used to resolve recent / pinned items. */
 export const searchIndexById: Map<string, SearchEntry> = new Map(

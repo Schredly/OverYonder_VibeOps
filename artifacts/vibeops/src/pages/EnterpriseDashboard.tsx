@@ -31,19 +31,19 @@ import {
   ChevronRight,
   Handshake,
 } from "lucide-react";
-import { applications, LIFECYCLE_STAGES } from "@/data/apm/applications";
+import { LIFECYCLE_STAGES } from "@/data/apm/applications";
 import { capabilities, topLevelCapabilities } from "@/data/apm/capabilities";
-import { projects } from "@/data/apm/projects";
-import { apmTasks } from "@/data/apm/tasks";
 import { findPerson } from "@/data/apm/people";
 import { dispositionTone, healthBarColor } from "@/components/apm/tone";
 import {
   projectDeliveries,
-  deliverySummary,
   deliveryStatusTone,
   type ProjectDelivery,
   type SideDelivery,
 } from "@/data/apm/projectDelivery";
+import { useApmData } from "@/context/ApmDataContext";
+import { useAppContext } from "@/context/AppContext";
+import { tenantOf } from "@/lib/tenantScope";
 
 const tooltipStyle = {
   backgroundColor: "hsl(var(--popover))",
@@ -170,13 +170,19 @@ function ProjectDeliveryRow({ d }: { d: ProjectDelivery }) {
 }
 
 export default function EnterpriseDashboard() {
+  const { activeTenant } = useAppContext();
+  const { applications: appStore, projects: projectStore, tasks: taskStore } = useApmData();
+  const applications = appStore.items;
+  const projects = projectStore.items;
+  const apmTasks = taskStore.items;
+
   const totalApps = applications.length;
   const appsAtRisk = applications.filter((a) => a.riskLevel === "High" || a.riskLevel === "Critical").length;
   const appsNoOwner = applications.filter((a) => !a.ownerId || !findPerson(a.ownerId)).length;
   const certNeeded = applications.filter((a) => a.certStatus === "Due" || a.certStatus === "Overdue" || a.certStatus === "Not Started").length;
   const aiCandidates = applications.filter((a) => a.aiReadiness === "High").length;
   const migrationCandidates = applications.filter((a) => a.disposition === "Migrate" || a.disposition === "Replace").length;
-  const avgTechDebt = Math.round(applications.reduce((s, a) => s + a.techDebtScore, 0) / totalApps);
+  const avgTechDebt = Math.round(applications.reduce((s, a) => s + a.techDebtScore, 0) / (totalApps || 1));
   const today = new Date("2026-05-15");
   const consultantTasksOverdue = apmTasks.filter(
     (t) => findPerson(t.assigneeId)?.type === "consultant" && t.status !== "Complete" && new Date(t.dueDate) < today,
@@ -216,11 +222,18 @@ export default function EnterpriseDashboard() {
     .sort((a, b) => b.techDebtScore - a.techDebtScore)
     .slice(0, 6);
 
+  // Project delivery scoped to the active tenant.
+  const scopedDeliveries = projectDeliveries.filter((d) => {
+    const owner = tenantOf(d.project.id);
+    return owner === undefined || owner === activeTenant.id;
+  });
+  const partnerDeliveries = scopedDeliveries.filter((d) => d.partnerFirms.length > 0).length;
+
   return (
     <div className="space-y-6 p-8 pb-20">
       <PageHeader
         title="Executive Dashboard"
-        description="CIO view of the application portfolio — health, risk, modernization, and consultant delivery."
+        description={`${activeTenant.name} — ${activeTenant.summary}`}
         badges={
           <>
             <Badge className="bg-primary/10 text-primary hover:bg-primary/15">APM Lite</Badge>
@@ -327,8 +340,7 @@ export default function EnterpriseDashboard() {
           <div>
             <h3 className="text-base font-medium text-foreground">Project delivery — internal teams & partners</h3>
             <p className="mt-1 text-sm text-muted-foreground">
-              {deliverySummary.activeProjects} active projects · {deliverySummary.partnerProjects} with a consulting partner ·{" "}
-              {deliverySummary.internalOffTrack} internal off-track · {deliverySummary.partnerOffTrack} partner off-track.
+              {scopedDeliveries.length} active projects · {partnerDeliveries} with a consulting partner.
               Expand a row to see workstreams.
             </p>
           </div>
@@ -346,7 +358,7 @@ export default function EnterpriseDashboard() {
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {projectDeliveries.map((d) => (
+            {scopedDeliveries.map((d) => (
               <ProjectDeliveryRow key={d.project.id} d={d} />
             ))}
           </tbody>
