@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { useLocation } from "wouter";
 import { useAppContext } from "@/context/AppContext";
 import { tenants } from "@/data/tenants";
 import { mockRoles } from "@/data/roles";
 import { cn } from "@/lib/utils";
 import { Search, Bell, ChevronDown, Sparkles } from "lucide-react";
+import GlobalCommandPalette from "@/components/search/GlobalCommandPalette";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,6 +25,7 @@ export default function TopNav() {
     setActiveRole,
   } = useAppContext();
   const [, navigate] = useLocation();
+  const [paletteOpen, setPaletteOpen] = useState(false);
 
   const switchMode = (mode: "enterprise" | "consulting") => {
     setActiveView(mode);
@@ -42,14 +45,18 @@ export default function TopNav() {
           </div>
         </div>
 
-        <div className="relative hidden md:block">
+        <button
+          type="button"
+          onClick={() => setPaletteOpen(true)}
+          aria-label="Open global search"
+          className="relative hidden w-80 items-center rounded-lg border border-transparent bg-muted py-2 pl-10 pr-3 text-sm text-muted-foreground transition-colors hover:bg-secondary focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary md:flex"
+        >
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder="Search platform... (Cmd+K)"
-            className="w-80 rounded-lg border border-transparent bg-muted py-2 pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-          />
-        </div>
+          <span>Search platform...</span>
+          <kbd className="ml-auto inline-flex items-center gap-0.5 rounded border border-border bg-white px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
+            ⌘K
+          </kbd>
+        </button>
       </div>
 
       <div className="flex items-center gap-3">
@@ -151,6 +158,8 @@ export default function TopNav() {
           <ChevronDown className="h-4 w-4 text-muted-foreground" />
         </button>
       </div>
+
+      <GlobalCommandPalette open={paletteOpen} onOpenChange={setPaletteOpen} />
     </header>
   );
 }
