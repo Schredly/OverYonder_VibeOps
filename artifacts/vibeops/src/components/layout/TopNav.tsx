@@ -1,82 +1,155 @@
+import { useLocation } from "wouter";
 import { useAppContext } from "@/context/AppContext";
+import { tenants } from "@/data/tenants";
+import { mockRoles } from "@/data/roles";
 import { cn } from "@/lib/utils";
-import { Search, Bell, Sparkles, ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Search, Bell, ChevronDown, Sparkles } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function TopNav() {
-  const { activeView, setActiveView, activeTenant, activeRole } = useAppContext();
+  const {
+    activeView,
+    setActiveView,
+    activeTenant,
+    setActiveTenant,
+    activeRole,
+    setActiveRole,
+  } = useAppContext();
+  const [, navigate] = useLocation();
+
+  const switchMode = (mode: "enterprise" | "consulting") => {
+    setActiveView(mode);
+    navigate(mode === "enterprise" ? "/dashboard" : "/consulting/dashboard");
+  };
 
   return (
-    <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-border/40 glass px-4">
-      <div className="flex items-center gap-6">
+    <header className="flex h-16 w-full items-center justify-between border-b border-border bg-white px-6">
+      <div className="flex items-center gap-8">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/20 text-primary font-bold">
-            VO
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+            <span className="text-sm font-semibold text-primary-foreground">VO</span>
           </div>
-          <div className="flex flex-col">
-            <span className="text-sm font-bold leading-none tracking-tight text-foreground">VibeOps</span>
-            <span className="text-[10px] leading-none text-muted-foreground">by OverYonder</span>
+          <div className="leading-tight">
+            <div className="text-sm font-semibold text-foreground">VibeOps</div>
+            <div className="text-[11px] text-muted-foreground">Application Portfolio &amp; Modernization OS</div>
           </div>
         </div>
-        
-        <div className="relative hidden w-64 md:flex">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+
+        <div className="relative hidden md:block">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <input
             type="text"
             placeholder="Search platform... (Cmd+K)"
-            className="h-9 w-full rounded-md border border-border/50 bg-background/50 pl-9 pr-4 text-sm text-foreground shadow-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
+            className="w-80 rounded-lg border border-transparent bg-muted py-2 pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
           />
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
-        <div className="hidden items-center gap-2 rounded-full border border-border/50 bg-background/30 px-3 py-1.5 md:flex cursor-pointer hover:bg-background/50 transition-colors">
-          <span className="text-xs font-medium text-foreground">{activeTenant.name}</span>
-          <ChevronDown className="h-3 w-3 text-muted-foreground" />
-        </div>
+      <div className="flex items-center gap-3">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="hidden items-center gap-2 rounded-lg bg-muted px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-secondary md:flex">
+              <span>{activeTenant.name}</span>
+              <ChevronDown className="h-3 w-3 text-muted-foreground" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuLabel>Tenant</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {tenants.map((tenant) => (
+              <DropdownMenuItem
+                key={tenant.id}
+                onClick={() => setActiveTenant(tenant)}
+                className={cn(activeTenant.id === tenant.id && "font-medium text-primary")}
+              >
+                {tenant.name}
+                <span className="ml-auto text-xs text-muted-foreground">{tenant.industry}</span>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
 
-        <div className="hidden items-center gap-2 rounded-full border border-border/50 bg-background/30 px-3 py-1.5 md:flex cursor-pointer hover:bg-background/50 transition-colors">
-          <span className="text-xs font-medium text-foreground">{activeRole}</span>
-          <ChevronDown className="h-3 w-3 text-muted-foreground" />
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="hidden items-center gap-2 rounded-lg bg-muted px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-secondary md:flex">
+              <span>{activeRole}</span>
+              <ChevronDown className="h-3 w-3 text-muted-foreground" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuLabel>Role</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {mockRoles.map((role) => (
+              <DropdownMenuItem
+                key={role}
+                onClick={() => setActiveRole(role)}
+                className={cn(activeRole === role && "font-medium text-primary")}
+              >
+                {role}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
 
-        <div className="flex h-6 items-center rounded-full bg-amber-500/10 px-2.5 text-[10px] font-semibold text-amber-500 border border-amber-500/20">
+        <span className="hidden rounded-full bg-success/10 px-2.5 py-1 text-[10px] font-semibold tracking-wide text-success md:inline-flex">
           PRODUCTION
-        </div>
+        </span>
 
-        <div className="flex items-center gap-2 rounded-md border border-border/50 bg-background/30 p-1 cursor-pointer hover:bg-background/50 transition-colors">
+        <div className="flex items-center gap-1 rounded-lg bg-muted p-1">
           <button
-            onClick={() => setActiveView("enterprise")}
+            data-testid="topnav-mode-enterprise"
+            onClick={() => switchMode("enterprise")}
             className={cn(
-              "px-3 py-1 text-xs font-medium rounded transition-all",
-              activeView === "enterprise" ? "bg-primary text-primary-foreground shadow" : "text-muted-foreground hover:text-foreground"
+              "rounded-md px-4 py-1.5 text-sm font-medium transition-colors",
+              activeView === "enterprise"
+                ? "bg-white text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
             Internal Enterprise
           </button>
           <button
-            onClick={() => setActiveView("consulting")}
+            data-testid="topnav-mode-consulting"
+            onClick={() => switchMode("consulting")}
             className={cn(
-              "px-3 py-1 text-xs font-medium rounded transition-all",
-              activeView === "consulting" ? "bg-primary text-primary-foreground shadow" : "text-muted-foreground hover:text-foreground"
+              "rounded-md px-4 py-1.5 text-sm font-medium transition-colors",
+              activeView === "consulting"
+                ? "bg-white text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
             Consulting Services
           </button>
         </div>
 
-        <Button variant="outline" size="icon" className="relative h-8 w-8 rounded-full border-primary/30 text-primary hover:bg-primary/10">
-          <Sparkles className="h-4 w-4" />
-        </Button>
+        <button
+          aria-label="AI insights"
+          className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-primary"
+        >
+          <Sparkles className="h-5 w-5" />
+        </button>
 
-        <Button variant="ghost" size="icon" className="relative h-8 w-8 rounded-full">
-          <Bell className="h-4 w-4 text-muted-foreground" />
-          <span className="absolute right-1 top-1 flex h-2 w-2 rounded-full bg-destructive"></span>
-        </Button>
-        
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-xs font-bold text-secondary-foreground cursor-pointer">
-          JS
-        </div>
+        <button
+          aria-label="Notifications"
+          className="relative rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted"
+        >
+          <Bell className="h-5 w-5" />
+          <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-primary" />
+        </button>
+
+        <button className="flex items-center gap-2 rounded-lg px-2 py-1 transition-colors hover:bg-muted">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground">
+            JS
+          </div>
+          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+        </button>
       </div>
     </header>
   );

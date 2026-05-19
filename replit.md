@@ -4,12 +4,22 @@ _Replace the heading above with the project's name, and this line with one sente
 
 ## Run & Operate
 
+### Docker (full stack)
+
+- `cp .env.example .env` — first time only
+- `docker compose up --build` — start Postgres + API (port 5000) + web (port 4173)
+- `docker compose up postgres -d` — Postgres only (use this when iterating on apps from the host)
+- `docker compose down -v` — stop and wipe the Postgres volume
+
+### Host-side commands
+
 - `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only). Reads `DATABASE_URL` from your shell — point it at `localhost:5432` when Postgres is running via Docker.
+
+Required env: `DATABASE_URL` — Postgres connection string. See `.env.example`.
 
 ## Stack
 

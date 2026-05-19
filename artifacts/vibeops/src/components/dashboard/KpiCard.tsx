@@ -1,18 +1,23 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { motion } from "framer-motion";
+import { Link } from "wouter";
 import { cn } from "@/lib/utils";
-import { ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { TrendingUp, TrendingDown, ArrowUpRight } from "lucide-react";
 
 interface KpiCardProps {
   title: string;
   value: string | number;
   prefix?: string;
   suffix?: string;
-  trend?: number; // percentage
+  subtitle?: string;
+  trend?: number;
   trendDirection?: "up" | "down";
   trendType?: "good" | "bad" | "neutral";
+  icon?: ReactNode;
   delay?: number;
   className?: string;
+  /** When set, the card becomes a link to this route. */
+  href?: string;
 }
 
 export default function KpiCard({
@@ -20,67 +25,98 @@ export default function KpiCard({
   value,
   prefix = "",
   suffix = "",
+  subtitle,
   trend,
   trendDirection = "up",
   trendType = "good",
+  icon,
   delay = 0,
   className,
+  href,
 }: KpiCardProps) {
   const [count, setCount] = useState(0);
 
-  // Simplified count-up effect
   useEffect(() => {
-    if (typeof value === "number") {
-      let start = 0;
-      const duration = 1000;
-      const increment = value / (duration / 16);
-      
-      const timer = setInterval(() => {
-        start += increment;
-        if (start >= value) {
-          setCount(value);
-          clearInterval(timer);
-        } else {
-          setCount(start);
-        }
-      }, 16);
-      return () => clearInterval(timer);
-    }
+    if (typeof value !== "number") return;
+    let start = 0;
+    const duration = 800;
+    const increment = value / (duration / 16);
+    const timer = setInterval(() => {
+      start += increment;
+      if (start >= value) {
+        setCount(value);
+        clearInterval(timer);
+      } else {
+        setCount(start);
+      }
+    }, 16);
+    return () => clearInterval(timer);
   }, [value]);
 
-  const displayValue = typeof value === "number" ? Math.round(count).toLocaleString() : value;
+  const displayValue =
+    typeof value === "number"
+      ? Number.isInteger(value)
+        ? Math.round(count).toLocaleString()
+        : count.toFixed(1)
+      : value;
 
-  return (
+  const trendColor =
+    trendType === "good"
+      ? "text-success"
+      : trendType === "bad"
+        ? "text-destructive"
+        : "text-muted-foreground";
+
+  const card = (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay }}
-      className={cn("glass rounded-xl p-5 relative overflow-hidden group", className)}
+      transition={{ duration: 0.35, delay }}
+      className={cn(
+        "group h-full rounded-lg border border-border bg-card p-6 shadow-sm transition-shadow hover:shadow-md",
+        href && "cursor-pointer hover:border-primary/40",
+        className,
+      )}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      
-      <div className="flex justify-between items-start mb-2">
-        <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>
+      <div className="mb-4 flex items-start justify-between">
+        <h3 className="text-sm text-muted-foreground">{title}</h3>
+        <div className="flex items-center gap-1.5">
+          {icon && <div className="text-muted-foreground">{icon}</div>}
+          {href && (
+            <ArrowUpRight className="h-4 w-4 text-muted-foreground/40 transition-colors group-hover:text-primary" />
+          )}
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <div className="flex items-baseline gap-1">
+          {prefix && <span className="text-2xl font-semibold text-foreground/80">{prefix}</span>}
+          <span className="text-3xl font-semibold tracking-tight text-foreground">{displayValue}</span>
+          {suffix && <span className="text-xl font-semibold text-foreground/80">{suffix}</span>}
+        </div>
+
+        {subtitle && <div className="text-sm text-muted-foreground">{subtitle}</div>}
+
         {trend !== undefined && (
-          <div
-            className={cn(
-              "flex items-center gap-1 text-xs font-semibold px-1.5 py-0.5 rounded",
-              trendType === "good" ? "text-emerald-500 bg-emerald-500/10" : 
-              trendType === "bad" ? "text-rose-500 bg-rose-500/10" : 
-              "text-amber-500 bg-amber-500/10"
+          <div className={cn("flex items-center gap-1 text-sm", trendColor)}>
+            {trendDirection === "up" ? (
+              <TrendingUp className="h-4 w-4" />
+            ) : (
+              <TrendingDown className="h-4 w-4" />
             )}
-          >
-            {trendDirection === "up" ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
-            {Math.abs(trend)}%
+            <span>{Math.abs(trend)}%</span>
+            <span className="text-muted-foreground">vs last period</span>
           </div>
         )}
       </div>
-      
-      <div className="flex items-baseline">
-        {prefix && <span className="text-2xl font-bold text-foreground/80 mr-1">{prefix}</span>}
-        <span className="text-3xl font-bold tracking-tight text-foreground">{displayValue}</span>
-        {suffix && <span className="text-xl font-bold text-foreground/80 ml-1">{suffix}</span>}
-      </div>
     </motion.div>
+  );
+
+  return href ? (
+    <Link href={href} className="block">
+      {card}
+    </Link>
+  ) : (
+    card
   );
 }

@@ -5,35 +5,25 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard,
   Briefcase,
-  Inbox,
   ClipboardCheck,
-  GitMerge,
-  Kanban,
   TrendingUp,
-  Shield,
-  Radio,
   AppWindow,
-  Eye,
   ArrowRightLeft,
-  Scale,
-  Network,
   Users,
   Users2,
-  BarChart3,
   Settings,
-  Handshake,
-  Truck,
   DollarSign,
-  PieChart,
   Clock,
-  FileText,
   CheckSquare,
-  Heart,
-  Cpu,
   AlertTriangle,
   BarChart2,
   Building2,
   Target,
+  Layers,
+  Cpu,
+  BadgeCheck,
+  RefreshCw,
+  ListChecks,
 } from "lucide-react";
 
 interface NavItem {
@@ -50,49 +40,40 @@ interface NavSection {
 const enterpriseSections: NavSection[] = [
   {
     label: "Executive",
+    items: [{ name: "Executive Dashboard", path: "/dashboard", icon: LayoutDashboard }],
+  },
+  {
+    label: "Portfolio & Architecture",
     items: [
-      { name: "CIO Dashboard", path: "/dashboard", icon: LayoutDashboard },
-      { name: "Executive Review Board", path: "/executive-review", icon: Users },
+      { name: "Application Portfolio", path: "/applications", icon: AppWindow },
+      { name: "Capability Map", path: "/capabilities", icon: Layers },
+      { name: "Technology Portfolio", path: "/technology", icon: Cpu },
     ],
   },
   {
-    label: "Portfolio & Intake",
+    label: "Modernization & Delivery",
     items: [
-      { name: "AI Portfolio", path: "/portfolio", icon: Briefcase },
-      { name: "Intake Center", path: "/intake", icon: Inbox },
+      { name: "Modernization Projects", path: "/projects", icon: TrendingUp },
+      { name: "Migration Waves", path: "/migrations", icon: ArrowRightLeft },
+      { name: "Task Management", path: "/tasks", icon: ListChecks },
+      { name: "Certification Center", path: "/certifications", icon: BadgeCheck },
+    ],
+  },
+  {
+    label: "Governance",
+    items: [
       { name: "Assessments", path: "/assessments", icon: ClipboardCheck },
-      { name: "Approval Workflows", path: "/approvals", icon: GitMerge },
+      { name: "Risks & Decisions", path: "/risks", icon: AlertTriangle },
     ],
   },
   {
-    label: "Work Management",
-    items: [
-      { name: "Task Management", path: "/tasks", icon: Kanban },
-      { name: "AI Adoption Center", path: "/adoption", icon: TrendingUp },
-      { name: "Resource Management", path: "/resources", icon: Users2 },
-    ],
+    label: "Collaboration",
+    items: [{ name: "Consultant Workspace", path: "/consultant-workspace", icon: Users2 }],
   },
   {
-    label: "AI & Security",
+    label: "Platform",
     items: [
-      { name: "AI Control Tower", path: "/control-tower", icon: Radio },
-      { name: "Security Assessments", path: "/security", icon: Shield },
-      { name: "Shadow AI Discovery", path: "/shadow-ai", icon: Eye },
-      { name: "Governance", path: "/governance", icon: Scale },
-    ],
-  },
-  {
-    label: "Infrastructure",
-    items: [
-      { name: "Applications", path: "/applications", icon: AppWindow },
-      { name: "Architecture Graph", path: "/architecture", icon: Network },
-      { name: "Migrations", path: "/migrations", icon: ArrowRightLeft },
-      { name: "Forecasting", path: "/forecasting", icon: BarChart3 },
-    ],
-  },
-  {
-    label: "Admin",
-    items: [
+      { name: "ServiceNow Sync", path: "/servicenow", icon: RefreshCw },
       { name: "Admin", path: "/admin", icon: Settings },
     ],
   },
@@ -103,42 +84,36 @@ const consultingSections: NavSection[] = [
     label: "Executive",
     items: [
       { name: "Services CEO Dashboard", path: "/consulting/dashboard", icon: LayoutDashboard },
-      { name: "Executive Reporting", path: "/consulting/reporting", icon: BarChart2 },
+      { name: "Reporting", path: "/consulting/reporting", icon: BarChart2 },
     ],
   },
   {
-    label: "Client Management",
+    label: "Clients & Delivery",
     items: [
-      { name: "Client Portfolio", path: "/consulting/clients", icon: Briefcase },
-      { name: "Consulting Engagements", path: "/consulting/engagements", icon: Handshake },
-      { name: "Proposal Pipeline", path: "/consulting/proposals", icon: FileText },
-      { name: "Customer Health", path: "/consulting/health", icon: Heart },
+      { name: "Clients", path: "/consulting/clients", icon: Building2 },
+      { name: "Engagements", path: "/consulting/engagements", icon: Briefcase },
+      { name: "Delivery", path: "/consulting/delivery", icon: Target },
+      { name: "Tasks", path: "/consulting/tasks", icon: CheckSquare },
     ],
   },
   {
-    label: "Delivery",
+    label: "Time & Billing",
     items: [
-      { name: "Delivery Operations", path: "/consulting/delivery", icon: Truck },
-      { name: "Task Delivery", path: "/consulting/tasks", icon: CheckSquare },
-      { name: "AI Transformation Programs", path: "/consulting/programs", icon: Cpu },
-      { name: "Delivery Risks", path: "/consulting/risks", icon: AlertTriangle },
+      { name: "Consultant Time", path: "/consulting/time", icon: Clock },
+      { name: "Billing", path: "/consulting/billing", icon: DollarSign },
     ],
   },
   {
-    label: "Revenue & Resources",
+    label: "Workforce & Risk",
     items: [
-      { name: "Revenue Operations", path: "/consulting/revenue", icon: DollarSign },
-      { name: "Resource Utilization", path: "/consulting/utilization", icon: PieChart },
-      { name: "Billable Utilization", path: "/consulting/billable", icon: Clock },
-      { name: "Consultant Capacity", path: "/consulting/capacity", icon: Users },
-      { name: "Forecasting", path: "/consulting/forecasting", icon: TrendingUp },
+      { name: "Utilization", path: "/consulting/utilization", icon: TrendingUp },
+      { name: "Capacity", path: "/consulting/capacity", icon: Users },
+      { name: "Risks", path: "/consulting/risks", icon: AlertTriangle },
     ],
   },
   {
-    label: "Admin",
-    items: [
-      { name: "Admin", path: "/consulting/admin", icon: Settings },
-    ],
+    label: "Administration",
+    items: [{ name: "Admin", path: "/consulting/admin", icon: Settings }],
   },
 ];
 
@@ -147,19 +122,16 @@ function NavLink({ item, isActive }: { item: NavItem; isActive: boolean }) {
     <Link href={item.path} className="block" data-testid={`nav-link-${item.path.replace(/\//g, "-")}`}>
       <div
         className={cn(
-          "group relative flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-sm font-medium transition-all duration-150",
+          "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors",
           isActive
-            ? "bg-primary/15 text-primary"
-            : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
+            ? "bg-primary text-primary-foreground font-medium"
+            : "text-sidebar-foreground hover:bg-sidebar-accent"
         )}
       >
-        {isActive && (
-          <span className="absolute left-0 top-1/2 -translate-y-1/2 h-4 w-0.5 rounded-full bg-primary" />
-        )}
         <item.icon
           className={cn(
-            "h-3.5 w-3.5 shrink-0 transition-colors",
-            isActive ? "text-primary" : "text-muted-foreground/70 group-hover:text-foreground"
+            "h-4 w-4 shrink-0",
+            isActive ? "text-primary-foreground" : "text-muted-foreground"
           )}
         />
         <span className="truncate">{item.name}</span>
@@ -170,23 +142,28 @@ function NavLink({ item, isActive }: { item: NavItem; isActive: boolean }) {
 
 export default function Sidebar() {
   const { activeView, setActiveView } = useAppContext();
-  const [location] = useLocation();
+  const [location, navigate] = useLocation();
 
   const sections = activeView === "enterprise" ? enterpriseSections : consultingSections;
 
   const isActive = (path: string) =>
     location === path || (location === "/" && path === "/dashboard");
 
+  const switchMode = (mode: "enterprise" | "consulting") => {
+    setActiveView(mode);
+    navigate(mode === "enterprise" ? "/dashboard" : "/consulting/dashboard");
+  };
+
   return (
-    <aside className="flex h-full w-60 flex-col border-r border-border/30 bg-sidebar/60 backdrop-blur-sm">
-      {/* View Switcher */}
-      <div className="flex-shrink-0 p-3 border-b border-border/30">
-        <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/50 mb-2 px-1">
+    <aside className="flex h-full w-64 flex-col border-r border-sidebar-border bg-sidebar">
+      {/* Operating Mode toggle (also present in TopNav — duplicated for muscle memory). */}
+      <div className="flex-shrink-0 border-b border-sidebar-border p-4">
+        <p className="mb-2 px-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
           Operating Mode
         </p>
-        <div className="relative flex rounded-lg bg-background/40 p-0.5 border border-border/40">
+        <div className="relative flex rounded-lg border border-border bg-white p-0.5">
           <motion.span
-            className="absolute top-0.5 bottom-0.5 rounded-md bg-primary/20 border border-primary/30"
+            className="absolute top-0.5 bottom-0.5 rounded-md bg-primary/10 ring-1 ring-primary/30"
             animate={{
               left: activeView === "enterprise" ? "2px" : "50%",
               width: "calc(50% - 2px)",
@@ -195,9 +172,9 @@ export default function Sidebar() {
           />
           <button
             data-testid="view-switcher-enterprise"
-            onClick={() => setActiveView("enterprise")}
+            onClick={() => switchMode("enterprise")}
             className={cn(
-              "relative z-10 flex-1 flex items-center justify-center gap-1.5 rounded-md py-1.5 text-xs font-medium transition-colors",
+              "relative z-10 flex flex-1 items-center justify-center gap-1.5 rounded-md py-1.5 text-xs font-medium transition-colors",
               activeView === "enterprise" ? "text-primary" : "text-muted-foreground hover:text-foreground"
             )}
           >
@@ -206,9 +183,9 @@ export default function Sidebar() {
           </button>
           <button
             data-testid="view-switcher-consulting"
-            onClick={() => setActiveView("consulting")}
+            onClick={() => switchMode("consulting")}
             className={cn(
-              "relative z-10 flex-1 flex items-center justify-center gap-1.5 rounded-md py-1.5 text-xs font-medium transition-colors",
+              "relative z-10 flex flex-1 items-center justify-center gap-1.5 rounded-md py-1.5 text-xs font-medium transition-colors",
               activeView === "consulting" ? "text-primary" : "text-muted-foreground hover:text-foreground"
             )}
           >
@@ -218,8 +195,7 @@ export default function Sidebar() {
         </div>
       </div>
 
-      {/* Navigation Sections */}
-      <nav className="flex-1 overflow-y-auto py-2 px-2 space-y-0.5">
+      <nav className="flex-1 overflow-y-auto p-4">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeView}
@@ -227,14 +203,14 @@ export default function Sidebar() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 8 }}
             transition={{ duration: 0.18 }}
-            className="space-y-0.5"
+            className="space-y-6"
           >
             {sections.map((section) => (
-              <div key={section.label} className="mb-1">
-                <p className="px-2.5 pt-3 pb-1 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/40 select-none">
+              <div key={section.label}>
+                <h3 className="mb-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
                   {section.label}
-                </p>
-                <div className="space-y-0.5">
+                </h3>
+                <div className="space-y-1">
                   {section.items.map((item) => (
                     <NavLink key={item.path} item={item} isActive={isActive(item.path)} />
                   ))}

@@ -1,0 +1,59 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-vibeops}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-vibeops}
+      POSTGRES_DB: ${POSTGRES_DB:-vibeops}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-vibeops} -d ${POSTGRES_DB:-vibeops}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    # The repo's pnpm-workspace.yaml strips every native binary except
+    # linux-x64-gnu (esbuild, rollup, lightningcss, @tailwindcss/oxide).
+    # Force amd64 so installs/builds work on arm64 hosts (Apple Silicon).
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: artifacts/api-server/Dockerfile
+      platforms:
+        - linux/amd64
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: "5000"
+      DATABASE_URL: postgres://${POSTGRES_USER:-vibeops}:${POSTGRES_PASSWORD:-vibeops}@postgres:5432/${POSTGRES_DB:-vibeops}
+    ports:
+      - "${API_PORT:-5000}:5000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  web:
+    # See note on `api.platform`. Same constraint applies here.
+    platform: linux/amd64
+    build:
+      context: .
+      dockerfile: artifacts/vibeops/Dockerfile
+      platforms:
+        - linux/amd64
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: "4173"
+      BASE_PATH: "/"
+    ports:
+      - "${WEB_PORT:-4173}:4173"
+    depends_on:
+      - api
+
+volumes:
+  postgres-data:

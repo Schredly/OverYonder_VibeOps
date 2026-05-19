@@ -40,6 +40,9 @@
   --color-destructive-foreground: hsl(var(--destructive-foreground));
   --color-destructive-border: var(--destructive-border);
 
+  --color-success: hsl(var(--success));
+  --color-success-foreground: hsl(var(--success-foreground));
+
   --color-chart-1: hsl(var(--chart-1));
   --color-chart-2: hsl(var(--chart-2));
   --color-chart-3: hsl(var(--chart-3));
@@ -67,118 +70,123 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/*
+ * OverYonder palette — warm white surfaces, charcoal text, orange accent, green success.
+ * Values are in HSL "H S% L%" form so existing `hsl(var(--token))` consumers (the entire
+ * shadcn ui kit) keep working. Use --primary for the orange action color and --foreground
+ * for the charcoal text.
+ */
 :root {
-  --button-outline: rgba(255,255,255, .10);
-  --badge-outline: rgba(255,255,255, .05);
+  --background: 0 0% 100%;            /* #ffffff */
+  --foreground: 0 0% 18%;             /* #2d2d2d */
 
-  --opaque-button-border-intensity: 9;
+  --card: 0 0% 98%;                   /* #fafafa */
+  --card-foreground: 0 0% 18%;
+  --card-border: 0 0% 90%;            /* #e5e5e5 */
 
-  --elevate-1: rgba(255,255,255, .04);
-  --elevate-2: rgba(255,255,255, .09);
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 18%;
+  --popover-border: 0 0% 90%;
 
-  --background: 222 47% 7%;
-  --foreground: 210 40% 96%;
-  --card: 222 47% 10%;
-  --card-foreground: 210 40% 96%;
-  --card-border: 217 32% 17%;
-  --border: 217 32% 17%;
-  --sidebar: 222 47% 8%;
-  --sidebar-foreground: 210 40% 96%;
-  --sidebar-border: 217 32% 17%;
-  --sidebar-primary: 217 91% 60%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 222 47% 13%;
-  --sidebar-accent-foreground: 210 40% 96%;
-  --sidebar-ring: 217 91% 60%;
-  --primary: 217 91% 60%;
+  --primary: 24 95% 53%;              /* orange #f97316 — primary action */
   --primary-foreground: 0 0% 100%;
-  --secondary: 217 32% 17%;
-  --secondary-foreground: 210 40% 96%;
-  --muted: 222 47% 13%;
-  --muted-foreground: 215 20% 55%;
-  --accent: 196 100% 42%;
-  --accent-foreground: 0 0% 100%;
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 0 0% 100%;
-  --popover: 222 47% 10%;
-  --popover-foreground: 210 40% 96%;
-  --popover-border: 217 32% 17%;
-  --input: 217 32% 22%;
-  --ring: 217 91% 60%;
-  --chart-1: 217 91% 60%;
-  --chart-2: 196 100% 42%;
-  --chart-3: 142 76% 45%;
-  --chart-4: 38 92% 50%;
-  --chart-5: 0 84% 60%;
 
-  --app-font-sans: 'Inter', sans-serif;
+  --secondary: 0 0% 96%;              /* #f5f5f5 */
+  --secondary-foreground: 0 0% 18%;
+
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 45%;       /* #737373 */
+
+  --accent: 24 95% 53%;               /* orange — same as primary, used for highlights */
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 0 73% 51%;           /* #dc2626 */
+  --destructive-foreground: 0 0% 100%;
+
+  --success: 142 71% 45%;             /* #22c55e */
+  --success-foreground: 0 0% 100%;
+
+  --border: 0 0% 90%;
+  --input: 0 0% 90%;
+  --ring: 24 95% 53%;
+
+  --chart-1: 24 95% 53%;              /* orange */
+  --chart-2: 142 71% 45%;             /* green */
+  --chart-3: 217 91% 60%;             /* blue */
+  --chart-4: 271 81% 56%;             /* purple */
+  --chart-5: 45 93% 47%;              /* amber */
+
+  --sidebar: 0 0% 98%;                /* #fafafa */
+  --sidebar-foreground: 0 0% 18%;
+  --sidebar-border: 0 0% 90%;
+  --sidebar-primary: 24 95% 53%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 0 0% 100%;
+  --sidebar-accent-foreground: 0 0% 18%;
+  --sidebar-ring: 24 95% 53%;
+
+  --app-font-sans: 'Inter', system-ui, sans-serif;
   --app-font-serif: Georgia, serif;
   --app-font-mono: 'JetBrains Mono', monospace;
-  --radius: .5rem;
+  --radius: 0.5rem;
 
-  --shadow-2xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-sm: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 1px 2px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 1px 2px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-md: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 2px 4px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-lg: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 4px 6px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 8px 10px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-2xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
+  /* Soft enterprise shadows — the OverYonder vibe. */
+  --shadow-2xs: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+  --shadow-xs:  0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-sm:  0 1px 2px 0 rgb(0 0 0 / 0.05), 0 1px 3px 0 rgb(0 0 0 / 0.06);
+  --shadow:     0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06);
+  --shadow-md:  0 4px 6px -1px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.06);
+  --shadow-lg:  0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.06);
+  --shadow-xl:  0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.06);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.12);
+
+  /* Legacy elevate vars — kept so any leftover hover-elevate utilities still resolve. */
+  --button-outline: rgb(0 0 0 / 0.08);
+  --badge-outline: rgb(0 0 0 / 0.06);
+  --opaque-button-border-intensity: 9;
+  --elevate-1: rgb(0 0 0 / 0.03);
+  --elevate-2: rgb(0 0 0 / 0.06);
 }
 
+/*
+ * Dark-mode tokens are intentionally a near-mirror of light. The platform is light-first;
+ * `.dark` exists only so any third-party library that toggles it doesn't blow up.
+ */
 .dark {
-  --button-outline: rgba(255,255,255, .10);
-  --badge-outline: rgba(255,255,255, .05);
-
-  --opaque-button-border-intensity: 9;
-
-  --elevate-1: rgba(255,255,255, .04);
-  --elevate-2: rgba(255,255,255, .09);
-
-  --background: 222 47% 7%;
-  --foreground: 210 40% 96%;
-  --card: 222 47% 10%;
-  --card-foreground: 210 40% 96%;
-  --card-border: 217 32% 17%;
-  --border: 217 32% 17%;
-  --sidebar: 222 47% 8%;
-  --sidebar-foreground: 210 40% 96%;
-  --sidebar-border: 217 32% 17%;
-  --sidebar-primary: 217 91% 60%;
+  --background: 0 0% 100%;
+  --foreground: 0 0% 18%;
+  --card: 0 0% 98%;
+  --card-foreground: 0 0% 18%;
+  --card-border: 0 0% 90%;
+  --border: 0 0% 90%;
+  --sidebar: 0 0% 98%;
+  --sidebar-foreground: 0 0% 18%;
+  --sidebar-border: 0 0% 90%;
+  --sidebar-primary: 24 95% 53%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 222 47% 13%;
-  --sidebar-accent-foreground: 210 40% 96%;
-  --sidebar-ring: 217 91% 60%;
-  --primary: 217 91% 60%;
+  --sidebar-accent: 0 0% 100%;
+  --sidebar-accent-foreground: 0 0% 18%;
+  --sidebar-ring: 24 95% 53%;
+  --primary: 24 95% 53%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 217 32% 17%;
-  --secondary-foreground: 210 40% 96%;
-  --muted: 222 47% 13%;
-  --muted-foreground: 215 20% 55%;
-  --accent: 196 100% 42%;
+  --secondary: 0 0% 96%;
+  --secondary-foreground: 0 0% 18%;
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 45%;
+  --accent: 24 95% 53%;
   --accent-foreground: 0 0% 100%;
-  --destructive: 0 84% 60%;
+  --destructive: 0 73% 51%;
   --destructive-foreground: 0 0% 100%;
-  --popover: 222 47% 10%;
-  --popover-foreground: 210 40% 96%;
-  --popover-border: 217 32% 17%;
-  --input: 217 32% 22%;
-  --ring: 217 91% 60%;
-  --chart-1: 217 91% 60%;
-  --chart-2: 196 100% 42%;
-  --chart-3: 142 76% 45%;
-  --chart-4: 38 92% 50%;
-  --chart-5: 0 84% 60%;
-
-  --shadow-2xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-sm: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 1px 2px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 1px 2px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-md: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 2px 4px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-lg: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 4px 6px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 8px 10px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
-  --shadow-2xl: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
-
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 18%;
+  --popover-border: 0 0% 90%;
+  --input: 0 0% 90%;
+  --ring: 24 95% 53%;
+  --chart-1: 24 95% 53%;
+  --chart-2: 142 71% 45%;
+  --chart-3: 217 91% 60%;
+  --chart-4: 271 81% 56%;
+  --chart-5: 45 93% 47%;
 }
 
 @layer base {
@@ -192,15 +200,26 @@
 }
 
 @layer utilities {
-  .glass { background: rgba(255,255,255,0.04); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.08); }
-  .glass-strong { background: rgba(255,255,255,0.07); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.12); }
-  
-  /* Hide ugly search cancel button in Chrome until we can style it properly */
+  /*
+   * .glass used to be dark glassmorphism. Now it's a light enterprise card —
+   * white surface, soft border, subtle shadow. Existing components keep working
+   * without edits, but they pick up the new style automatically.
+   */
+  .glass {
+    background-color: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-sm);
+  }
+  .glass-strong {
+    background-color: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow);
+  }
+
   input[type="search"]::-webkit-search-cancel-button {
     @apply hidden;
   }
 
-  /* Placeholder styling for contentEditable div */
   [contenteditable][data-placeholder]:empty::before {
     content: attr(data-placeholder);
     color: hsl(var(--muted-foreground));
@@ -208,7 +227,6 @@
   }
 
   .no-default-hover-elevate {}
-
   .no-default-active-elevate {}
 
   .toggle-elevate::before,
@@ -257,13 +275,5 @@
   .hover-elevate-2:hover:not(.no-default-hover-elevate)::after,
   .active-elevate-2:active:not(.no-default-active-elevate)::after {
     background-color: var(--elevate-2);
-  }
-
-  .border.hover-elevate:not(.no-hover-interaction-elevate)::after,
-  .border.active-elevate:not(.no-active-interaction-elevate)::after,
-  .border.hover-elevate-2:not(.no-hover-interaction-elevate)::after,
-  .border.active-elevate-2:not(.no-active-interaction-elevate)::after,
-  .border.hover-elevate:not(.no-hover-interaction-elevate)::after {
-    inset: -1px;
   }
 }
